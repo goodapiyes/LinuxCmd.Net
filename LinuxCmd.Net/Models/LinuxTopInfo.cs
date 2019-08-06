@@ -114,15 +114,50 @@ namespace LinuxCmd.Net.Models
 
     public class LinuxTopInfo_TaskDetail
     {
+        /// <summary>
+        /// 进程id
+        /// </summary>
         public string Pid { get; set; }
+        /// <summary>
+        /// 进程所有者的用户名
+        /// </summary>
         public string User { get; set; }
+        /// <summary>
+        /// 进程使用的虚拟内存总量 
+        /// </summary>
         public double Virt { get; set; }
+        /// <summary>
+        /// 进程使用的、未被换出的物理内存大小
+        /// </summary>
         public double Res { get; set; }
+        /// <summary>
+        /// 共享内存大小
+        /// </summary>
         public double Shr { get; set; }
+        /// <summary>
+        ///进程状态。
+        ///D=    不可中断的睡眠状态
+        ///R=    运行
+        ///S=    睡眠
+        ///T=    跟踪/停止
+        ///Z=    僵尸进程
+        /// </summary>
         public string Status { get; set; }
+        /// <summary>
+        /// 上次更新到现在的CPU时间占用百分比
+        /// </summary>
         public double Cpu { get; set; }
+        /// <summary>
+        /// 进程使用的物理内存百分比
+        /// </summary>
         public double Mem { get; set; }
+        /// <summary>
+        /// 进程使用的CPU时间总计
+        /// </summary>
         public string Time { get; set; }
+        /// <summary>
+        /// 命令名/命令行
+        /// </summary>
         public string Commad { get; set; }
     }
 }

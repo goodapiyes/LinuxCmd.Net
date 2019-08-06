@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using LinuxCmd.Net;
+using LinuxCmd.Net.Commads;
 using LinuxCmd.Net.Models;
 
 namespace LinuxCmd.Net.ZTest
@@ -16,12 +17,20 @@ namespace LinuxCmd.Net.ZTest
         //you can’t get to run on Windows
         static void Main(string[] args)
         {
+            //string text = File.ReadAllText("text.txt");
+            //var output = (new Vmstat()).GetLinuxVmstatInfo(text);
+            //return;
             //top version 3.3.10
             //string top = "top -b -n 1".LinuxBash();
             //string top = File.ReadAllText("top.txt");
             LinuxTopInfo info = LinuxHelper.LinuxTop();
             $"echo {info.TaskDetails[0].SerializeJSON()}".LinuxBash(false);
             var lsResult = "ls".LinuxBash(false);
+            LinuxDfInfo disk = LinuxHelper.LinuxDisk();
+            $"echo {disk.SerializeJSON()}".LinuxBash(false);
+            LinuxVmstatInfo vmstat = LinuxHelper.LinuxVmstat();
+            $"echo {vmstat.SerializeJSON()}".LinuxBash(false);
+            Console.WriteLine("Press any key to exit");
             Console.ReadLine();
         }
     }
