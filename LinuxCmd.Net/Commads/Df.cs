@@ -7,7 +7,7 @@ namespace LinuxCmd.Net.Commads
 {
     public class Df
     {
-        public List<LinuxDfInfo> GetDfInfos(string input)
+        public virtual List<LinuxDfInfo> GetDfInfos(string input)
         {
             var matchs = Regex.Matches(input, @"\s*(\S+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\S+)%\s+(\S+)");
             List<LinuxDfInfo> list = new List<LinuxDfInfo>();
@@ -28,7 +28,7 @@ namespace LinuxCmd.Net.Commads
             return list;
         }
 
-        public LinuxDfInfo GetDiskInfo(string input)
+        public virtual LinuxDfInfo GetDiskInfo(string input)
         {
             return GetDfInfos(input)[0];
         }

@@ -6,7 +6,7 @@ namespace LinuxCmd.Net.Commads
 {
     public class Sar
     {
-        public LinuxSarInfo GetLinuxSarInfo(string input)
+        public virtual LinuxSarInfo GetLinuxSarInfo(string input)
         {
             Match match = Regex.Match(input, @"Average:\s+eth0\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)");
             if (match.Success)

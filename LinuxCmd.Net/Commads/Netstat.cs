@@ -6,7 +6,7 @@ namespace LinuxCmd.Net.Commads
 {
     public class Netstat
     {
-        public List<LinuxNetstatInfo> GetLinuxNetstatInfos(string input)
+        public virtual List<LinuxNetstatInfo> GetLinuxNetstatInfos(string input)
         {
             MatchCollection matches = Regex.Matches(input, @"(tcp)\s+\d+\s+\d+\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)");
             List<LinuxNetstatInfo> list = new List<LinuxNetstatInfo>();

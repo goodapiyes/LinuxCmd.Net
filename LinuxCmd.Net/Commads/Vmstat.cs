@@ -6,7 +6,7 @@ namespace LinuxCmd.Net.Commads
 {
     public class Vmstat
     {
-        public LinuxVmstatInfo GetLinuxVmstatInfo(string input)
+        public virtual LinuxVmstatInfo GetLinuxVmstatInfo(string input)
         {
             Match match = Regex.Match(input, @"(\d+)\s+(\d+)\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+(\d+)\s+(\d+)");
             if (match.Success)

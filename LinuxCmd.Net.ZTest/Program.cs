@@ -17,12 +17,9 @@ namespace LinuxCmd.Net.ZTest
         //you can’t get to run on Windows
         static void Main(string[] args)
         {
+
+
             //string text = File.ReadAllText("text.txt");
-            //var output = (new Vmstat()).GetLinuxVmstatInfo(text);
-            //return;
-            //top version 3.3.10
-            //string top = "top -b -n 1".LinuxBash();
-            //string top = File.ReadAllText("top.txt");
 
             //redirect:true Gets the execution result of the server
             var ls = "ls".LinuxBash().Output;
@@ -66,6 +63,29 @@ namespace LinuxCmd.Net.ZTest
             {
                 $"echo {net.SerializeJSON()}".LinuxBash(false);
             }
+
+            LinuxServerInfo server = new LinuxServerInfo();
+            //Server status
+            var OSName = server.OSName;
+            $"echo {OSName}".LinuxBash(false);
+
+            var RunTime = server.RunTime;
+            $"echo {RunTime}".LinuxBash(false);
+
+            var CpuCores = server.CpuCores;
+            $"echo {CpuCores}".LinuxBash(false);
+
+            var CpuUsage = server.CpuUsage;
+            $"echo {CpuUsage}".LinuxBash(false);
+
+            var MemTotal = server.MemTotal;
+            $"echo {MemTotal}".LinuxBash(false);
+
+            var MemAvailable = server.MemAvailable;
+            $"echo {MemAvailable}".LinuxBash(false);
+
+            var MemUsed = server.MemUsed;
+            $"echo {MemUsed}".LinuxBash(false);
 
             Console.WriteLine("Press any key to exit");
             Console.ReadLine();
