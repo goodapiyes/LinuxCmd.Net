@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using LinuxCmd.Net.Commads;
 using LinuxCmd.Net.Models;
@@ -51,6 +52,18 @@ namespace LinuxCmd.Net
         {
             var result = "vmstat".LinuxBash();
             return result.Success ? (new Vmstat()).GetLinuxVmstatInfo(result.Output) : null;
+        }
+
+        public static LinuxSarInfo LinuxSar()
+        {
+            var result = "sar -n DEV 1 1".LinuxBash();
+            return result.Success ? (new Sar()).GetLinuxSarInfo(result.Output) : null;
+        }
+
+        public static List<LinuxNetstatInfo> LinuxNetstats()
+        {
+            var result = "netstat -lntup".LinuxBash();
+            return result.Success ? (new Netstat()).GetLinuxNetstatInfos(result.Output) : null;
         }
     }
 }

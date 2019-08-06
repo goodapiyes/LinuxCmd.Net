@@ -7,16 +7,45 @@
 
 ```C#
 //redirect:true Gets the execution result of the server
-var lsResult = "ls".LinuxBash().Output;
+var ls = "ls".LinuxBash().Output;
 
 //redirect:false The result is output to the server
-lsResult= "ls".LinuxBash(false).Output;
+ls = "ls".LinuxBash(false).Output;
 
 //Get linux server status, include CPU, memory, and networking. use top cmd
-LinuxTopInfo info = LinuxHelper.LinuxTop();
+LinuxTopInfo top = LinuxHelper.LinuxTop();
 
-//...
-var cpu = info.UserCpu;
-var mem = info.MemUsed;
-var taskList = info.TaskDetails;
+//The result is output to the server
+$"echo {top.TaskDetails[0].SerializeJSON()}".LinuxBash(false);
+
+//cpu usage
+var cpu = top.UserCpu;
+
+//mem usage
+var mem = top.MemUsed;
+
+//server load
+var averages = top.Averages;
+
+//The process list
+var taskList = top.TaskDetails;
+
+//Disk status
+LinuxDfInfo disk = LinuxHelper.LinuxDisk();
+$"echo {disk.SerializeJSON()}".LinuxBash(false);
+
+//Disk read/write rate
+LinuxVmstatInfo vmstat = LinuxHelper.LinuxVmstat();
+$"echo {vmstat.SerializeJSON()}".LinuxBash(false);
+
+//Network packets
+LinuxSarInfo sar = LinuxHelper.LinuxSar();
+$"echo {sar.SerializeJSON()}".LinuxBash(false);
+
+//Tcp Network Connections
+var netstats = LinuxHelper.LinuxNetstats();
+foreach (var net in netstats)
+{
+    $"echo {net.SerializeJSON()}".LinuxBash(false);
+}
 ```
