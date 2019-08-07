@@ -11,11 +11,11 @@
         /// </summary>
         public double SentPacket { get; set; }
         /// <summary>
-        /// 接收的字节数
+        /// 接收的字节数 kb/s
         /// </summary>
         public double ReceivedBytes { get; set; }
         /// <summary>
-        /// 发送的字节数
+        /// 发送的字节数 kb/s
         /// </summary>
         public double SentBytes { get; set; }
     }

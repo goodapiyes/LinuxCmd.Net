@@ -6,46 +6,58 @@
 ## Example
 
 ```C#
-//redirect:true Gets the execution result of the server
+//redirect:true 获取服务器命令执行结果
 var ls = "ls".LinuxBash().Output;
 
-//redirect:false The result is output to the server
+//redirect:false 将命令执行结果重定向输出到服务器
 ls = "ls".LinuxBash(false).Output;
 
-//Get linux server status, include CPU, memory, and networking. use top cmd
-LinuxTopInfo top = LinuxHelper.LinuxTop();
+//服务器状态对象
+LinuxServerInfo server = new LinuxServerInfo();
 
-//The result is output to the server
-$"echo {top.TaskDetails[0].SerializeJSON()}".LinuxBash(false);
+//系统信息
+var OSName = server.OSName;
+$"echo {OSName}".LinuxBash(false);
 
-//cpu usage
-var cpu = top.UserCpu;
+//运行时长
+var RunTime = server.RunTime;
+$"echo {RunTime}".LinuxBash(false);
 
-//mem usage
-var mem = top.MemUsed;
+//系统负载
+var LoadAverages = server.LoadAverages;
+$"echo {LoadAverages}".LinuxBash(false);
 
-//server load
-var averages = top.Averages;
+//CPU状态: cpu描述,cpu核心数,cpu使用率
+var cpuInfo = server.Cpu;
+$"echo {cpuInfo.SerializeJSON().Replace('(',' ').Replace(')',' ')}".LinuxBash(false);
 
-//The process list
-var taskList = top.TaskDetails;
+//内存状态:内存总容量,实际可用容量,已使用的容量,缓存化的容量,系统缓冲容量
+var Mem = server.Mem;
+$"echo {Mem.SerializeJSON()}".LinuxBash(false);
 
-//Disk status
-LinuxDfInfo disk = LinuxHelper.LinuxDisk();
-$"echo {disk.SerializeJSON()}".LinuxBash(false);
+//磁盘状态:磁盘总容量,已用容量,可用容量,已用百分比
+var Disk = server.Disk;
+$"echo {Disk.SerializeJSON()}".LinuxBash(false);
 
-//Disk read/write rate
-LinuxVmstatInfo vmstat = LinuxHelper.LinuxVmstat();
-$"echo {vmstat.SerializeJSON()}".LinuxBash(false);
+//IO读写状态:读请求数量,写请求数量,读字节数,写字节数
+var IO = server.IO;
+$"echo {IO.SerializeJSON()}".LinuxBash(false);
 
-//Network packets
-LinuxSarInfo sar = LinuxHelper.LinuxSar();
-$"echo {sar.SerializeJSON()}".LinuxBash(false);
+//网络状态:接收的数据包数量,发送的数据包数量,接收字节数,发送字节数
+var NetWork = server.NetWork;
+$"echo {NetWork.SerializeJSON()}".LinuxBash(false);
 
-//Tcp Network Connections
-var netstats = LinuxHelper.LinuxNetstats();
-foreach (var net in netstats)
+//网络连接状态: tcp客户端IP,服务器IP,连接状态
+var NetworkConnections = server.NetworkConnections;
+foreach (var net in NetworkConnections)
 {
     $"echo {net.SerializeJSON()}".LinuxBash(false);
+}
+
+//进程列表:进程id,进程所有者的用户名,虚拟内存使用量,物理内存使用量,进程状态,CPU使用率,进程命令名
+var Tasks = server.Tasks;
+for (int i = 0; i < 6; i++)
+{
+    $"echo {Tasks[i].SerializeJSON()}".LinuxBash(false);
 }
 ```

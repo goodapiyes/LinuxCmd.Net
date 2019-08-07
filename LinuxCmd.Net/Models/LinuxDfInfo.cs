@@ -7,15 +7,15 @@
         /// </summary>
         public string Filesystem { get; set; }
         /// <summary>
-        /// 容量
+        /// 容量 MB
         /// </summary>
         public double Size { get; set; }
         /// <summary>
-        /// 已用
+        /// 已用 MB
         /// </summary>
         public double Used { get; set; }
         /// <summary>
-        /// 可用
+        /// 可用 MB
         /// </summary>
         public double Avail { get; set; }
         /// <summary>

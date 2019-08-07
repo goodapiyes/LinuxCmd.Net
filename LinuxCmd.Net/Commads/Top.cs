@@ -65,7 +65,7 @@ namespace LinuxCmd.Net.Commads
 
         
 
-        protected virtual List<LinuxTopInfo_TaskDetail> GetTaskDetailsByRgx(string input)
+        public virtual List<LinuxTopInfo_TaskDetail> GetTaskDetailsByRgx(string input)
         {
             List<LinuxTopInfo_TaskDetail> details= new List<LinuxTopInfo_TaskDetail>();
             var matchs = Regex.Matches(input, @"\s+(\d+)\s+(\S+)\s+\d+\s+\d+\s+(\d+)\s+(\d+)\s+(\d+)\s+(\w+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s*");

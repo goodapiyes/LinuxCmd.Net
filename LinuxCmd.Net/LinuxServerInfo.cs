@@ -1,73 +1,213 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
+using System.Text.RegularExpressions;
+using LinuxCmd.Net.Commads;
+using LinuxCmd.Net.Models;
 
 namespace LinuxCmd.Net
 {
     public class LinuxServerInfo
     {
+        /// <summary>
+        /// 操作系统信息
+        /// </summary>
         public string OSName => GetOSName();
-
+        /// <summary>
+        /// 累积运行时间
+        /// </summary>
         public string RunTime => GetRunTime();
+        /// <summary>
+        /// 系统负载,任务队列的平均长度
+        /// </summary>
+        public string LoadAverages => GetLoadAverages();
+        /// <summary>
+        /// cpu信息
+        /// </summary>
+        public CpuInfo Cpu => GetCpu();
+        /// <summary>
+        /// 内存信息
+        /// </summary>
+        public MemInfo Mem => GetMem();
+        /// <summary>
+        /// 磁盘信息
+        /// </summary>
+        public LinuxDfInfo Disk => LinuxHelper.LinuxDisk();
+        /// <summary>
+        /// 磁盘IO读写信息
+        /// </summary>
+        public IOInfo IO => GetIO();
+        /// <summary>
+        /// 网络信息
+        /// </summary>
+        public LinuxSarInfo NetWork => LinuxHelper.LinuxSar();
+        /// <summary>
+        /// 进程列表信息
+        /// </summary>
+        public List<LinuxTopInfo_TaskDetail> Tasks => GetTasks();
+        /// <summary>
+        /// 网络连接列表信息
+        /// </summary>
+        public List<LinuxNetstatInfo> NetworkConnections => LinuxHelper.LinuxNetstats();
 
-        public string CpuCores=> GetCpuCores();
+        private Top top =new Top();
+        #region Realize
 
-        public string CpuName => GetCpuName();
-
-        public double CpuUsage => GetCpuUsage();
-
-        public int MemTotal => GetMemTotal();
-
-        public int MemAvailable => GetMemAvailable();
-
-        public int MemUsed => GetMemUsed();
         protected virtual string GetOSName()
         {
-            return Utility.GetSingleByRgx("lsb_release -a".LinuxBash().Output, @"Description:\s+(\S+\s+\S+\s+\S+\s+\S+)");
+            var os = Utility.GetSingleByRgx("lsb_release -a".LinuxBash().Output, @"Description:\s+(\S+\s+\S+\s+\S+\s+\S+)");
+            if (string.IsNullOrEmpty(os))
+                return "NaN";
+            return os;
         }
-
         protected virtual string GetRunTime()
         {
             var text = Utility.GetSingleByRgx("top -b -n 1".LinuxBash().Output, @"up\s+(\d+\s+days,\s+\d+:\d+),");
+            if (string.IsNullOrEmpty(text))
+                return "NaN";
             var days = Utility.GetSingleByRgx(text, @"(\d+)\s+days,");
-            var hours= Utility.GetSingleByRgx(text, @",\s+(\d+):");
+            var hours = Utility.GetSingleByRgx(text, @",\s+(\d+):");
             var minutes = Utility.GetSingleByRgx(text, @"\d+:(\d+)");
             return $"{days}天 {hours}小时 {minutes}分钟";
         }
-
-        protected virtual string GetCpuCores()
+        protected virtual string GetLoadAverages()
         {
-            return Utility.GetSingleByRgx("cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c".LinuxBash().Output, @"(\d+)\s+");
+            var aver = Utility.GetSingleByRgx("top -b -n 1".LinuxBash().Output, @"load\s+average:\s+(.+)\n");
+            if (string.IsNullOrEmpty(aver))
+                return "NaN";
+            else
+                return aver.Replace(" ", "");
+        }
+        protected virtual CpuInfo GetCpu()
+        {
+            CpuInfo info = new CpuInfo();
+
+            var cores = Utility.GetSingleByRgx("cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c".LinuxBash().Output, @"(\d+)\s+");
+            if (string.IsNullOrEmpty(cores))
+                info.CpuCores = -1;
+            else
+                info.CpuCores = Convert.ToInt32(cores);
+
+            var cpuName = Utility.GetSingleByRgx("cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c".LinuxBash().Output, @"\d+\s+(\S+.+)");
+            if (string.IsNullOrEmpty(cpuName))
+                info.CpuName = "NaN";
+            else
+                info.CpuName = cpuName;
+
+            var cpuUsage = Utility.GetSingleByRgx("top -b -n 1".LinuxBash().Output, @"ni,\s*(\S+)\s+id,");
+            if (string.IsNullOrEmpty(cpuUsage))
+                info.CpuUsage = -1;
+            else
+            {
+                info.CpuUsage = 100 - Convert.ToInt32(Convert.ToDouble(cpuUsage));
+            }
+
+            return info;
+        }
+        protected virtual MemInfo GetMem()
+        {
+            MemInfo info = new MemInfo();
+
+            var total = Utility.GetSingleByRgx("cat /proc/meminfo |grep MemTotal".LinuxBash().Output, @"MemTotal:\s+(\d+)\s+kB");
+            if (string.IsNullOrEmpty(total))
+                info.MemTotal = -1;
+            else
+                info.MemTotal = Convert.ToInt32(total) / 1024;
+
+            var available = Utility.GetSingleByRgx("cat /proc/meminfo |grep MemAvailable".LinuxBash().Output, @"MemAvailable:\s+(\d+)\s+kB");
+            if (string.IsNullOrEmpty(available))
+                info.MemAvailable = -1;
+            else
+                info.MemAvailable = Convert.ToInt32(available) / 1024;
+
+            var used = Utility.GetSingleByRgx("free -m".LinuxBash().Output, @"Mem:\s+\S+\s+(\S+)\s+");
+            if (string.IsNullOrEmpty(used))
+                info.MemUsed = -1;
+            else
+                info.MemUsed = Convert.ToInt32(used);
+
+            var cached = Utility.GetSingleByRgx("cat /proc/meminfo |grep Cached".LinuxBash().Output, @"Cached:\s+(\d+)\s+kB");
+            if (string.IsNullOrWhiteSpace(cached))
+                info.MemCached = -1;
+            else
+                info.MemCached = Convert.ToInt32(cached) / 1024;
+
+            var buffers = Utility.GetSingleByRgx("cat /proc/meminfo |grep Buffers".LinuxBash().Output, @"Buffers:\s+(\d+)\s+kB");
+            if (string.IsNullOrEmpty(buffers))
+                info.MemBuffers = -1;
+            else
+                info.MemBuffers = Convert.ToInt32(buffers) / 1024;
+            return info;
+        }
+        protected virtual IOInfo GetIO()
+        {
+            IOInfo info = new IOInfo();
+            Match match = Regex.Match("sar -b 1 1".LinuxBash().Output, @"Average:\s+\S+\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)");
+            if (match.Success)
+            {
+                info.ReadCount = Convert.ToDouble(match.Groups[1].Value).MathRound();
+                info.WriteCount = Convert.ToDouble(match.Groups[2].Value).MathRound();
+                info.ReadBytes = Convert.ToDouble(match.Groups[3].Value).MathRound();
+                info.WriteBytes = Convert.ToDouble(match.Groups[4].Value).MathRound();
+            }
+            return info;
         }
 
-        protected virtual string GetCpuName()
+        protected virtual List<LinuxTopInfo_TaskDetail> GetTasks()
         {
-            return Utility.GetSingleByRgx("cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c".LinuxBash().Output, @"\d+\s+(\S+.+)");
+            return top.GetTaskDetailsByRgx("top -b -n 1".LinuxBash().Output);
         }
 
-        protected virtual double GetCpuUsage()
-        {
-            var input = "top -b -n 1".LinuxBash().Output;
-            double free = Convert.ToDouble(Utility.GetSingleByRgx(input, @"ni,\s*(\S+)\s+id,"));
-            return 100 - free;
-        }
+        #endregion
 
-        protected virtual int GetMemTotal()
-        {
-            double total = Convert.ToDouble(Utility.GetSingleByRgx("cat /proc/meminfo |grep MemTotal".LinuxBash().Output, @"MemTotal:\s+(\d+)\s+kB")) / 1024;
-            return Convert.ToInt32(total);
-        }
+    }
 
-        protected virtual int GetMemAvailable()
-        {
-            double total = Convert.ToDouble(Utility.GetSingleByRgx("cat /proc/meminfo |grep MemAvailable".LinuxBash().Output, @"MemAvailable:\s+(\d+)\s+kB")) / 1024;
-            return Convert.ToInt32(total);
-        }
+    public class CpuInfo
+    {
+        /// <summary>
+        /// cpu描述
+        /// </summary>
+        public string CpuName { get; set; }
+        /// <summary>
+        /// cpu核心数
+        /// </summary>
+        public int CpuCores { get; set; }
+        /// <summary>
+        /// cpu使用率
+        /// </summary>
+        public int CpuUsage { get; set; }
+    }
 
-        protected virtual int GetMemUsed()
-        {
-            double total = Convert.ToDouble(Utility.GetSingleByRgx("free -m".LinuxBash().Output, @"Mem:\s+\S+\s+(\S+)\s+"));
-            return Convert.ToInt32(total);
-        }
+    public class MemInfo
+    {
+        /// <summary>
+        /// 内存总容量
+        /// </summary>
+        public int MemTotal { get; set; }
+        /// <summary>
+        /// 实际可用内存 MB
+        /// </summary>
+        public int MemAvailable { get; set; }
+        /// <summary>
+        /// 已使用的内存 MB
+        /// </summary>
+        public int MemUsed { get; set; }
+        /// <summary>
+        /// 缓存化的内存 MB
+        /// </summary>
+        public int MemCached { get; set; }
+        /// <summary>
+        /// 系统缓冲 MB
+        /// </summary>
+        public int MemBuffers { get; set; }
+    }
 
+    public class IOInfo
+    {
+        public double ReadCount { get; set; }
+        public double WriteCount { get; set; }
+        public double ReadBytes { get; set; }
+        public double WriteBytes { get; set; }
     }
 }
