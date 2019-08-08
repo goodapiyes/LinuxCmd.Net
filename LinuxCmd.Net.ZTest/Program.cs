@@ -19,11 +19,6 @@ namespace LinuxCmd.Net.ZTest
         //you can’t get to run on Windows
         static void Main(string[] args)
         {
-            NetWorker netWorker = new NetWorker();
-            netWorker.Start();
-            Console.WriteLine("Press any key to exit");
-            Console.ReadLine();
-            return;
 
             //string text = File.ReadAllText("text.txt");
 
