@@ -1,11 +1,13 @@
 {
   "local": {
     "ip": "127.0.0.1",
-    "port": 8080,
-    "isMaster": 1
+    "port": 9090,
+    "isMaster": 1,
+    "reconnection": 10,
+    "reset": 0 
   },
   "master": {
     "ip": "127.0.0.1",
-    "port": 8080
-  } 
+    "port": 9090
+  }
 }

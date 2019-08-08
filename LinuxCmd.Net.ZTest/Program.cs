@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using LinuxCmd.Net;
 using LinuxCmd.Net.Commads;
 using LinuxCmd.Net.Models;
-using LinuxCmd.Net.NetWork;
 
 
 namespace LinuxCmd.Net.ZTest
