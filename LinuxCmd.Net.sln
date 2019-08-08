@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinuxCmd.Net", "LinuxCmd.Ne
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinuxCmd.Net.ZTest", "LinuxCmd.Net.ZTest\LinuxCmd.Net.ZTest.csproj", "{2FF9A1A4-8BDF-4C4B-B650-51E7A1FF86EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinuxCmd.Net.NetWork", "LinuxCmd.Net.NetWork\LinuxCmd.Net.NetWork.csproj", "{23D500C8-7E45-4043-BB37-1ADB0C092DEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2FF9A1A4-8BDF-4C4B-B650-51E7A1FF86EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FF9A1A4-8BDF-4C4B-B650-51E7A1FF86EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FF9A1A4-8BDF-4C4B-B650-51E7A1FF86EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23D500C8-7E45-4043-BB37-1ADB0C092DEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23D500C8-7E45-4043-BB37-1ADB0C092DEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23D500C8-7E45-4043-BB37-1ADB0C092DEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23D500C8-7E45-4043-BB37-1ADB0C092DEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
