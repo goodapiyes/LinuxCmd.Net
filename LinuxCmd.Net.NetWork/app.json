@@ -3,10 +3,11 @@
     "ip": "127.0.0.1",
     "port": 9090,
     "isMaster": 1,
+    "timeout": 60,
     "reconnection": 10,
-    "reset": 0 
+    "polling": 10 
   },
-  "master": {
+  "target": {
     "ip": "127.0.0.1",
     "port": 9090
   }
