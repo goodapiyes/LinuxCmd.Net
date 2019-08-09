@@ -26,6 +26,7 @@ namespace LinuxCmd.Net.NetWork
 
         public void Start()
         {
+            LogHelper.Logger.Information("Client Start...");
             CreateTcpClient();
             PollingTimer = new System.Threading.Timer(Heartbeat, this, Polling.Value * 1000, Polling.Value * 1000);
         }
@@ -33,18 +34,24 @@ namespace LinuxCmd.Net.NetWork
         private void CreateTcpClient()
         {
             if (string.IsNullOrEmpty(Ip) || !Port.HasValue)
+            {
+                LogHelper.Logger.Error("ip,port is not available !!!");
                 throw new Exception("ip,port is not available !!");
+            }
             TcpClient = SocketFactory.CreateClient<AsyncTcpClient>(Ip, Port.Value);
             if (TimeOut != null) TcpClient.TimeOut = TimeOut.Value * 1000;
             TcpClient.DataReceive = (o, e) =>
             {
                 string line = e.Stream.ToPipeStream().ReadLine();
-                Console.WriteLine(line);
+                LogHelper.Logger.Information($"Receive Data: {line}");
+            };
+            TcpClient.ClientError = (c, e) =>
+            {
+                LogHelper.Logger.Error($"TcpClient Error:{e.Message},{e.Error.StackTrace}");
             };
         }
         private void Heartbeat(object obj)
         {
-            Console.WriteLine(Reconnectioned);
             if (Reconnectioned >= ReconnectionCount)
                 return;
             if (TcpClient == null)
@@ -53,9 +60,12 @@ namespace LinuxCmd.Net.NetWork
             {
                 TcpClient.Stream.ToPipeStream().WriteLine("heartbeat packet");
                 TcpClient.Stream.Flush();
+                Reconnectioned = 0;
             }
             else
             {
+                TcpClient.DisConnect();
+                TcpClient.LocalEndPoint = null;
                 Reconnectioned++;
             }
         }
