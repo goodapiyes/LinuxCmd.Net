@@ -14,7 +14,7 @@ namespace LinuxCmd.Net.NetWork
         public int Reconnectioned { get; private set; }
         public System.Threading.Timer PollingTimer { get; private set; }
         public AsyncTcpClient TcpClient;
-
+        public bool downTag = false;
         public ClientHandler()
         {
             this.Ip= ConfigHander.GetString("target:ip");
@@ -53,7 +53,15 @@ namespace LinuxCmd.Net.NetWork
         private void Heartbeat(object obj)
         {
             if (Reconnectioned >= ReconnectionCount)
+            {
+                //重连熔断降级至24小时一次轮询
+                if (!downTag)
+                {
+                    LogHelper.Logger.Error($"{ReconnectionCount}次重连失败,降级轮询频率至24小时一次");
+                    PollingTimer.Change(24 * 60 * 60 * 1000, 24 * 60 * 60 * 1000);
+                }
                 return;
+            }
             if (TcpClient == null)
                 CreateTcpClient();
             if (TcpClient.Connect())
@@ -61,6 +69,9 @@ namespace LinuxCmd.Net.NetWork
                 TcpClient.Stream.ToPipeStream().WriteLine("heartbeat packet");
                 TcpClient.Stream.Flush();
                 Reconnectioned = 0;
+                //恢复轮询正常状态
+                downTag = true;
+                PollingTimer.Change(Polling.Value * 1000, Polling.Value * 1000);
             }
             else
             {
