@@ -9,7 +9,7 @@ namespace LinuxCmd.Net.NetWork
         public string Ip { get; private set; }
         public int? Port { get; private set; }
         public int? ReconnectionCount { get; private set; }
-        public int? TimeOut { get;  }
+        public int? TimeOut { get; private set; }
         public int? Polling { get; private set; }
         public int Reconnectioned { get; private set; }
         public System.Threading.Timer PollingTimer { get; private set; }
@@ -17,11 +17,7 @@ namespace LinuxCmd.Net.NetWork
         public bool downTag = false;
         public ClientHandler()
         {
-            this.Ip= ConfigHander.GetString("target:ip");
-            this.Port= ConfigHander.GetInt("target:port");
-            this.ReconnectionCount= ConfigHander.GetInt("local:reconnection");
-            this.TimeOut = ConfigHander.GetInt("local:timeout");
-            this.Polling = ConfigHander.GetInt("local:polling");
+            LoadConfig();
         }
 
         public void Start()
@@ -29,6 +25,16 @@ namespace LinuxCmd.Net.NetWork
             LogHelper.Logger.Information("Client Start...");
             CreateTcpClient();
             PollingTimer = new System.Threading.Timer(Heartbeat, this, Polling.Value * 1000, Polling.Value * 1000);
+        }
+
+        private void LoadConfig()
+        {
+            ConfigHander.configuration.Reload();
+            this.Ip = ConfigHander.GetString("target:ip");
+            this.Port = ConfigHander.GetInt("target:port");
+            this.ReconnectionCount = ConfigHander.GetInt("local:reconnection");
+            this.TimeOut = ConfigHander.GetInt("local:timeout");
+            this.Polling = ConfigHander.GetInt("local:polling");
         }
 
         private void CreateTcpClient()
@@ -62,11 +68,14 @@ namespace LinuxCmd.Net.NetWork
                 }
                 return;
             }
+
+
+
             if (TcpClient == null)
                 CreateTcpClient();
             if (TcpClient.Connect())
             {
-                TcpClient.Stream.ToPipeStream().WriteLine("heartbeat packet");
+                TcpClient.Stream.ToPipeStream().WriteLine(CommandHandler.HeartBeatCmd());
                 TcpClient.Stream.Flush();
                 Reconnectioned = 0;
                 //恢复轮询正常状态

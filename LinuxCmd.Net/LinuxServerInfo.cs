@@ -100,7 +100,7 @@ namespace LinuxCmd.Net
                 info.CpuUsage = -1;
             else
             {
-                info.CpuUsage = 100 - Convert.ToInt32(Convert.ToDouble(cpuUsage));
+                info.CpuUsage = (100 - Convert.ToDouble(cpuUsage)).MathRound();
             }
 
             return info;
@@ -138,6 +138,9 @@ namespace LinuxCmd.Net
                 info.MemBuffers = -1;
             else
                 info.MemBuffers = Convert.ToInt32(buffers) / 1024;
+
+            info.MemUsage = (100 - Convert.ToDouble((info.MemAvailable * 1.00) / (info.MemTotal * 1.00) * 100)).MathRound();
+
             return info;
         }
         protected virtual IOInfo GetIO()
@@ -176,7 +179,7 @@ namespace LinuxCmd.Net
         /// <summary>
         /// cpu使用率
         /// </summary>
-        public int CpuUsage { get; set; }
+        public double CpuUsage { get; set; }
     }
 
     public class MemInfo
@@ -201,6 +204,10 @@ namespace LinuxCmd.Net
         /// 系统缓冲 MB
         /// </summary>
         public int MemBuffers { get; set; }
+        /// <summary>
+        /// 内存相对使用率
+        /// </summary>
+        public double MemUsage { get; set; }
     }
 
     public class IOInfo
