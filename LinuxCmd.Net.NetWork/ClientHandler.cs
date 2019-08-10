@@ -58,35 +58,42 @@ namespace LinuxCmd.Net.NetWork
         }
         private void Heartbeat(object obj)
         {
-            if (Reconnectioned >= ReconnectionCount)
+            try
             {
-                //重连熔断降级至24小时一次轮询
-                if (!downTag)
+
+                if (Reconnectioned >= ReconnectionCount)
                 {
-                    LogHelper.Logger.Error($"{ReconnectionCount}次重连失败,降级轮询频率至24小时一次");
-                    PollingTimer.Change(24 * 60 * 60 * 1000, 24 * 60 * 60 * 1000);
+                    //重连熔断降级至24小时一次轮询
+                    if (!downTag)
+                    {
+                        LogHelper.Logger.Error($"{ReconnectionCount}次重连失败,降级轮询频率至24小时一次");
+                        PollingTimer.Change(24 * 60 * 60 * 1000, 24 * 60 * 60 * 1000);
+                    }
+
+                    return;
                 }
-                return;
+
+                if (TcpClient == null)
+                    CreateTcpClient();
+                if (TcpClient.Connect())
+                {
+                    TcpClient.Stream.ToPipeStream().WriteLine("11111111111111111111111111111112222222222222222222222222222222222222222222222222222222222222222222222222222222222");
+                    TcpClient.Stream.Flush();
+                    Reconnectioned = 0;
+                    //恢复轮询正常状态
+                    downTag = true;
+                    PollingTimer.Change(Polling.Value * 1000, Polling.Value * 1000);
+                }
+                else
+                {
+                    TcpClient.DisConnect();
+                    TcpClient.LocalEndPoint = null;
+                    Reconnectioned++;
+                }
             }
-
-
-
-            if (TcpClient == null)
-                CreateTcpClient();
-            if (TcpClient.Connect())
+            catch (Exception ex)
             {
-                TcpClient.Stream.ToPipeStream().WriteLine(CommandHandler.HeartBeatCmd());
-                TcpClient.Stream.Flush();
-                Reconnectioned = 0;
-                //恢复轮询正常状态
-                downTag = true;
-                PollingTimer.Change(Polling.Value * 1000, Polling.Value * 1000);
-            }
-            else
-            {
-                TcpClient.DisConnect();
-                TcpClient.LocalEndPoint = null;
-                Reconnectioned++;
+                LogHelper.Logger.Error($"Heartbeat Error:"+ex.Message+ex.StackTrace);
             }
         }
         public void Dispose()

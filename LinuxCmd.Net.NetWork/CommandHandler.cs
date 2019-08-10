@@ -16,23 +16,23 @@ namespace LinuxCmd.Net.NetWork
             StringBuilder builder = new StringBuilder(CommandTag.HeartBeat.GetValue());
 
             //测试
-            builder.AppendFormat("|{0}", "CentOS Linux release 7.6.1810");
-            builder.AppendFormat("|{0}", "9天 7小时 09分钟");
-            builder.AppendFormat("|{0}", "1.13,1.33,1.55");
-            builder.AppendFormat("|{0}", "10");
-            builder.AppendFormat("|{0}", "3.1");
-            builder.AppendFormat("|{0}", "1");
-            builder.AppendFormat("|{0}", "7686788,12555555");
-            builder.AppendFormat("|End");
-
-            //builder.AppendFormat("|{0}",info.OSName);
-            //builder.AppendFormat("|{0}", info.RunTime);
-            //builder.AppendFormat("|{0}", info.LoadAverages);
-            //builder.AppendFormat("|{0}", info.Cpu.CpuUsage);
-            //builder.AppendFormat("|{0}", info.Mem.MemUsage);
-            //builder.AppendFormat("|{0}", info.Disk.UseUsage);
-            //builder.AppendFormat("|{0},{1}", info.IO.ReadBytes,info.IO.WriteBytes);
+            //builder.AppendFormat("|{0}", "CentOS Linux release 7.6.1810");
+            //builder.AppendFormat("|{0}", "9天 7小时 09分钟");
+            //builder.AppendFormat("|{0}", "1.13,1.33,1.55");
+            //builder.AppendFormat("|{0}", "10");
+            //builder.AppendFormat("|{0}", "3.1");
+            //builder.AppendFormat("|{0}", "1");
+            //builder.AppendFormat("|{0}", "7686788,12555555");
             //builder.AppendFormat("|End");
+
+            builder.AppendFormat("|{0}", info.OSName);
+            builder.AppendFormat("|{0}", info.RunTime);
+            builder.AppendFormat("|{0}", info.LoadAverages);
+            builder.AppendFormat("|{0}", info.Cpu.CpuUsage);
+            builder.AppendFormat("|{0}", info.Mem.MemUsage);
+            builder.AppendFormat("|{0}", info.Disk.UseUsage);
+            builder.AppendFormat("|{0},{1}", info.IO.ReadBytes, info.IO.WriteBytes);
+            builder.AppendFormat("|End");
             return builder.ToString();
         }
     }

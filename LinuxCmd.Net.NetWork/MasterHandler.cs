@@ -30,9 +30,6 @@ namespace LinuxCmd.Net.NetWork
             server.Options.DefaultListen.Port = Port.Value;
             server.Open();
             LogHelper.Logger.Information("Server Listening...");
-
-            Thread.Sleep(20000);
-
         }
 
         public void SendToOnlines(string cmd, IServer server)
