@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinuxCmd.Net.NetWork", "Lin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinuxCmd.Net.NetWork.Test", "LinuxCmd.Net.NetWork.Test\LinuxCmd.Net.NetWork.Test.csproj", "{2F119B39-E05E-475C-9481-FBD4522780A7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeetleX", "BeetleX\BeetleX.csproj", "{5FA900F6-C850-4742-8F4C-4B5B02239CC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cowboy.Sockets.Core", "Cowboy.Sockets.Core\Cowboy.Sockets.Core.csproj", "{5DC72C7D-FCCD-4B86-8677-D905BBC05D26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{2F119B39-E05E-475C-9481-FBD4522780A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F119B39-E05E-475C-9481-FBD4522780A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F119B39-E05E-475C-9481-FBD4522780A7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5FA900F6-C850-4742-8F4C-4B5B02239CC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5FA900F6-C850-4742-8F4C-4B5B02239CC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5FA900F6-C850-4742-8F4C-4B5B02239CC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5FA900F6-C850-4742-8F4C-4B5B02239CC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DC72C7D-FCCD-4B86-8677-D905BBC05D26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DC72C7D-FCCD-4B86-8677-D905BBC05D26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DC72C7D-FCCD-4B86-8677-D905BBC05D26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DC72C7D-FCCD-4B86-8677-D905BBC05D26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

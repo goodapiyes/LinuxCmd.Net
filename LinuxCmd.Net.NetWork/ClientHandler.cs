@@ -1,6 +1,8 @@
 ﻿using System;
-using BeetleX;
-using BeetleX.Clients;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using Cowboy.Sockets.Core;
 
 namespace LinuxCmd.Net.NetWork
 {
@@ -13,7 +15,7 @@ namespace LinuxCmd.Net.NetWork
         public int? Polling { get; private set; }
         public int Reconnectioned { get; private set; }
         public System.Threading.Timer PollingTimer { get; private set; }
-        public AsyncTcpClient TcpClient;
+        public TcpSocketClient Client;
         public bool downTag = false;
         public ClientHandler()
         {
@@ -44,23 +46,20 @@ namespace LinuxCmd.Net.NetWork
                 LogHelper.Logger.Error("ip,port is not available !!!");
                 throw new Exception("ip,port is not available !!");
             }
-            TcpClient = SocketFactory.CreateClient<AsyncTcpClient>(Ip, Port.Value);
-            if (TimeOut != null) TcpClient.TimeOut = TimeOut.Value * 1000;
-            TcpClient.DataReceive = (o, e) =>
-            {
-                string line = e.Stream.ToPipeStream().ReadLine();
-                LogHelper.Logger.Information($"Receive Data: {line}");
-            };
-            TcpClient.ClientError = (c, e) =>
-            {
-                LogHelper.Logger.Error($"TcpClient Error:{e.Message},{e.Error.StackTrace}");
-            };
+
+            var config = new TcpSocketClientConfiguration();
+            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse(Ip), Port.Value);
+
+            Client = new TcpSocketClient(ipEndPoint, config);
+            Client.ServerConnected += ServerConnected;
+            Client.ServerDisconnected += ServerDisconnected;
+            Client.ServerDataReceived += ServerDataReceived;
+            Client.Connect();
         }
         private void Heartbeat(object obj)
         {
             try
             {
-
                 if (Reconnectioned >= ReconnectionCount)
                 {
                     //重连熔断降级至24小时一次轮询
@@ -73,12 +72,11 @@ namespace LinuxCmd.Net.NetWork
                     return;
                 }
 
-                if (TcpClient == null)
+                if (Client == null)
                     CreateTcpClient();
-                if (TcpClient.Connect())
+                if (Client.State == TcpSocketConnectionState.Connected)
                 {
-                    TcpClient.Stream.ToPipeStream().WriteLine("11111111111111111111111111111112222222222222222222222222222222222222222222222222222222222222222222222222222222222");
-                    TcpClient.Stream.Flush();
+                    Client.Send(Encoding.UTF8.GetBytes(CommandHandler.HeartBeatCmd()));
                     Reconnectioned = 0;
                     //恢复轮询正常状态
                     downTag = true;
@@ -86,8 +84,6 @@ namespace LinuxCmd.Net.NetWork
                 }
                 else
                 {
-                    TcpClient.DisConnect();
-                    TcpClient.LocalEndPoint = null;
                     Reconnectioned++;
                 }
             }
@@ -96,11 +92,38 @@ namespace LinuxCmd.Net.NetWork
                 LogHelper.Logger.Error($"Heartbeat Error:"+ex.Message+ex.StackTrace);
             }
         }
+
+        private void ServerConnected(object sender, TcpServerConnectedEventArgs e)
+        {
+            Console.WriteLine($"服务器 {e.RemoteEndPoint} 已连接.");
+        }
+
+        private void ServerDisconnected(object sender, TcpServerDisconnectedEventArgs e)
+        {
+            Console.WriteLine($"服务器 {e.RemoteEndPoint} 断开连接.");
+        }
+
+        private void ServerDataReceived(object sender, TcpServerDataReceivedEventArgs e)
+        {
+            var text = Encoding.UTF8.GetString(e.Data, e.DataOffset, e.DataLength);
+            Console.Write($"服务器 : {e.Client.RemoteEndPoint} --> ");
+            if (e.DataLength < 256)
+            {
+                Console.WriteLine(text);
+            }
+            else
+            {
+                Console.WriteLine("{0} Bytes", e.DataLength);
+            }
+        }
+
         public void Dispose()
         {
-            TcpClient.DisConnect();
-            TcpClient.Dispose();
+            Client.Close();
+            Client.Dispose();
+            Client = null;
             PollingTimer.Dispose();
+            PollingTimer = null;
         }
     }
 }

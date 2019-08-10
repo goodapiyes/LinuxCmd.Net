@@ -8,12 +8,7 @@ namespace LinuxCmd.Net.NetWork.Test
         {
             NetWorker net = new NetWorker();
             net.Start();
-            //Console.WriteLine("Press any key to exit");
-            //Console.ReadLine();
-            while (true)
-            {
-                
-            }
+            Console.ReadLine();
         }
     }
 }

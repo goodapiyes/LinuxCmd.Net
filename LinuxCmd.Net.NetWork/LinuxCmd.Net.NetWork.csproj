@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BeetleX\BeetleX.csproj" />
+    <ProjectReference Include="..\Cowboy.Sockets.Core\Cowboy.Sockets.Core.csproj" />
     <ProjectReference Include="..\LinuxCmd.Net\LinuxCmd.Net.csproj" />
   </ItemGroup>
 
