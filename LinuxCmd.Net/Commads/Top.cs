@@ -14,7 +14,7 @@ namespace LinuxCmd.Net.Commads
     {
         public virtual LinuxTopInfo GetTop(string input)
         {
-            var rows = input.Split("\n");
+            var rows = input.Split('\n');
             if (rows.Length < 5)
                 return null;
 
