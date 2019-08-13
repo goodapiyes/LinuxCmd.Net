@@ -26,4 +26,6 @@
     <ProjectReference Include="..\LinuxCmd.Net\LinuxCmd.Net.csproj" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties app_1json__JSONSchema="http://json.schemastore.org/appsettings" /></VisualStudio></ProjectExtensions>
+
 </Project>

@@ -1,14 +1,15 @@
 {
-  "local": {
-    "ip": "127.0.0.1",
-    "port": 9090,
-    "isMaster": 1,
-    "timeout": 60,
-    "reconnection": 10,
-    "polling": 10 
-  },
-  "target": {
+  "type": "worker",
+  "master": {
     "ip": "127.0.0.1",
     "port": 9090
+  },
+  "worker": {
+    "reconnection": 10,
+    "timeout": 60,
+    "polling": 10
+  },
+  "observer": {
+
   }
 }

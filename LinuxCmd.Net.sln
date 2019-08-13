@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29123.89
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.705
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinuxCmd.Net", "LinuxCmd.Net\LinuxCmd.Net.csproj", "{8C937573-7E0C-4CF8-918F-D8B9F01F2370}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinuxCmd.Net.NetWork.Test", "LinuxCmd.Net.NetWork.Test\LinuxCmd.Net.NetWork.Test.csproj", "{2F119B39-E05E-475C-9481-FBD4522780A7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cowboy.Sockets.Core", "Cowboy.Sockets.Core\Cowboy.Sockets.Core.csproj", "{5DC72C7D-FCCD-4B86-8677-D905BBC05D26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinuxCmd.Net.ControlDesk", "LinuxCmd.Net.ControlDesk\LinuxCmd.Net.ControlDesk.csproj", "{17518348-EC82-47F9-A660-1EF09CA11186}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{5DC72C7D-FCCD-4B86-8677-D905BBC05D26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DC72C7D-FCCD-4B86-8677-D905BBC05D26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DC72C7D-FCCD-4B86-8677-D905BBC05D26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17518348-EC82-47F9-A660-1EF09CA11186}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17518348-EC82-47F9-A660-1EF09CA11186}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17518348-EC82-47F9-A660-1EF09CA11186}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17518348-EC82-47F9-A660-1EF09CA11186}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

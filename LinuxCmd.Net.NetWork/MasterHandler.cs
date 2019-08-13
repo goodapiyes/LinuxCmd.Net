@@ -17,8 +17,8 @@ namespace LinuxCmd.Net.NetWork
         public ConcurrentDictionary<string, TcpSocketSession> Sessions { get; private set; }
         public MasterHandler()
         {
-            this.Ip = ConfigHander.GetString("local:ip");
-            this.Port = ConfigHander.GetInt("local:port");
+            this.Ip = ConfigHander.GetString("master:ip");
+            this.Port = ConfigHander.GetInt("master:port");
             Sessions=new ConcurrentDictionary<string, TcpSocketSession>();
         }
 

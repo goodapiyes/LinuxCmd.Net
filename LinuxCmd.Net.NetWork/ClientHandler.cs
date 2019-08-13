@@ -32,11 +32,11 @@ namespace LinuxCmd.Net.NetWork
         private void LoadConfig()
         {
             ConfigHander.configuration.Reload();
-            this.Ip = ConfigHander.GetString("target:ip");
-            this.Port = ConfigHander.GetInt("target:port");
-            this.ReconnectionCount = ConfigHander.GetInt("local:reconnection");
-            this.TimeOut = ConfigHander.GetInt("local:timeout");
-            this.Polling = ConfigHander.GetInt("local:polling");
+            this.Ip = ConfigHander.GetString("master:ip");
+            this.Port = ConfigHander.GetInt("master:port");
+            this.ReconnectionCount = ConfigHander.GetInt("worker:reconnection");
+            this.TimeOut = ConfigHander.GetInt("worker:timeout");
+            this.Polling = ConfigHander.GetInt("worker:polling");
         }
 
         private void CreateTcpClient()

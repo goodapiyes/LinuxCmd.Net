@@ -12,9 +12,9 @@ namespace LinuxCmd.Net.NetWork
 
         public void Start()
         {
-            if (ConfigHander.GetInt("local:isMaster") == 1)
+            if (ConfigHander.GetString("type") == "master")
                 InitMaster();
-            else
+            else if (ConfigHander.GetString("type") == "worker")
                 InitClient();
         }
         private void InitMaster()
@@ -31,9 +31,9 @@ namespace LinuxCmd.Net.NetWork
         
         public bool Dispose()
         {
-            if (ConfigHander.GetInt("local:isMaster") == 1)
+            if (ConfigHander.GetString("type") == "master")
                 Master.Dispose();
-            else
+            else if (ConfigHander.GetString("type") == "worker")
                 Client.Dispose();
             return true;
         }

@@ -7,6 +7,8 @@ namespace LinuxCmd.Net
     {
         public static string GetSingleByRgx(string input, string pattern)
         {
+            if (string.IsNullOrWhiteSpace(input))
+                return "";
             var match = Regex.Match(input, pattern);
             return match.Success ? match.Groups[1].Value : "";
         }

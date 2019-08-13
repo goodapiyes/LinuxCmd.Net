@@ -146,7 +146,10 @@ namespace LinuxCmd.Net
         protected virtual IOInfo GetIO()
         {
             IOInfo info = new IOInfo();
-            Match match = Regex.Match("sar -b 1 1".LinuxBash().Output, @"Average:\s+\S+\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)");
+            var result = "sar -b 1 1".LinuxBash().Output;
+            if (string.IsNullOrWhiteSpace(result))
+                return info;
+            Match match = Regex.Match(result, @"Average:\s+\S+\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)");
             if (match.Success)
             {
                 info.ReadCount = Convert.ToDouble(match.Groups[1].Value).MathRound();

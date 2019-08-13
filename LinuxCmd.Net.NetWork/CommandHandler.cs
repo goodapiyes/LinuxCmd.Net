@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using Newtonsoft.Json;
 
@@ -12,6 +13,8 @@ namespace LinuxCmd.Net.NetWork
     {
         public static string HeartBeatCmd()
         {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                return "not support for current os";
             LinuxServerInfo info = new LinuxServerInfo();
             StringBuilder builder = new StringBuilder(CommandTag.HeartBeat.GetValue());
 
@@ -29,9 +32,9 @@ namespace LinuxCmd.Net.NetWork
             builder.AppendFormat("|{0}", info.RunTime);
             builder.AppendFormat("|{0}", info.LoadAverages);
             builder.AppendFormat("|{0}", info.Cpu.CpuUsage);
-            builder.AppendFormat("|{0}", info.Mem.MemUsage);
-            builder.AppendFormat("|{0}", info.Disk.UseUsage);
-            builder.AppendFormat("|{0},{1}", info.IO.ReadBytes, info.IO.WriteBytes);
+            builder.AppendFormat("|{0}", info.Mem?.MemUsage);
+            builder.AppendFormat("|{0}", info.Disk?.UseUsage);
+            builder.AppendFormat("|{0},{1}", info.IO?.ReadBytes, info.IO?.WriteBytes);
             builder.AppendFormat("|End");
             return builder.ToString();
         }
