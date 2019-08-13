@@ -13,11 +13,12 @@ namespace LinuxCmd.Net.NetWork
     {
         public static string HeartBeatCmd()
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                return "not support for current os";
+            //if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            //    return "not support for current os";
             LinuxServerInfo info = new LinuxServerInfo();
-            StringBuilder builder = new StringBuilder(CommandTag.HeartBeat.GetValue());
-
+            StringBuilder builder = new StringBuilder();
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                return $"{CommandTag.HeartBeat.GetValue()}|0|End";
             //测试
             //builder.AppendFormat("|{0}", "CentOS Linux release 7.6.1810");
             //builder.AppendFormat("|{0}", "9天 7小时 09分钟");
@@ -27,7 +28,7 @@ namespace LinuxCmd.Net.NetWork
             //builder.AppendFormat("|{0}", "1");
             //builder.AppendFormat("|{0}", "7686788,12555555");
             //builder.AppendFormat("|End");
-
+            builder.AppendFormat("{0}|{1}", CommandTag.HeartBeat.GetValue(),1);
             builder.AppendFormat("|{0}", info.OSName);
             builder.AppendFormat("|{0}", info.RunTime);
             builder.AppendFormat("|{0}", info.LoadAverages);
@@ -37,6 +38,19 @@ namespace LinuxCmd.Net.NetWork
             builder.AppendFormat("|{0},{1}", info.IO?.ReadBytes, info.IO?.WriteBytes);
             builder.AppendFormat("|End");
             return builder.ToString();
+        }
+
+        public static string GetCmdName(string data)
+        {
+            if (!data.Contains('|'))
+                return null;
+            return data.Split('|')[0];
+        }
+        public static bool GetCmdValid(string data)
+        {
+            if (!data.Contains('|'))
+                return false;
+            return data.Split('|')[1].Contains("1");
         }
     }
 

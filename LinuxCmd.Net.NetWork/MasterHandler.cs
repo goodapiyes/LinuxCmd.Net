@@ -86,7 +86,8 @@ namespace LinuxCmd.Net.NetWork
             {
                 Console.WriteLine("{0} Bytes", e.DataLength);
             }
-            Server.SendTo(e.Session, Encoding.UTF8.GetBytes(text));
+
+            Server.SendTo(e.Session, Encoding.UTF8.GetBytes("ok"));
         }
 
         public void Dispose()
